@@ -1,5 +1,6 @@
 package steps;
 
+import io.qameta.allure.Step;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -11,7 +12,7 @@ import static io.restassured.RestAssured.given;
 import static models.EndPoints.*;
 
 public class OrderSteps {
-
+    @Step("Создание заказа")
     public static Response createOrder(String accessToken, List<String> validIngredients) {
         RequestSpecification request = given()
                 .contentType(ContentType.JSON)
@@ -28,7 +29,7 @@ public class OrderSteps {
 
         return request.when().post(CREATE_ORDER_PATH);
     }
-
+    @Step("Получение заказов конкретного пользователя")
     public static Response getUserListOfOrders(String accessToken) {
         RequestSpecification request = given().contentType(ContentType.JSON);
 
@@ -42,7 +43,7 @@ public class OrderSteps {
                 .then()
                 .extract().response();
     }
-
+    @Step("Отмена заказа")
     public static void cancelOrder(String orderNumber) {
         if (orderNumber != null && !orderNumber.isBlank()) {
             given()

@@ -7,6 +7,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static data.GenerateValues.*;
 import static data.TestValues.*;
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -66,7 +67,7 @@ public class UserProfileEditTest extends BaseTest {
         refreshToken = loginResponse.then().extract().path("refreshToken");
         accessToken = loginResponse.then().extract().path("accessToken");
 
-        String newPassword = "NewPassword";
+        String newPassword = generateUniquePassword();
         UserModel update = new UserModel(null, newPassword, null);
         Response response = updateUserInfo(accessToken, update);
         checkSuccessfulUserPasswordUpdateStep(response, newPassword);
@@ -132,7 +133,8 @@ public class UserProfileEditTest extends BaseTest {
     @Step("Проверка ошибки при изменение данных пользователя без авторизации")
     public void checkUserUpdateWithoutAuthErrorStep(Response response) {
         response.then().statusCode(SC_UNAUTHORIZED)
-                .body("success", equalTo(false));
+                .body("success", equalTo(false))
+                .body("message", equalTo("You should be authorised"));
     }
     @Step ("Проверка ошибки при передаче почты для обновления, которая уже используется")
     public void checkUpdateEmailWithExistingErrorStep(Response response) {

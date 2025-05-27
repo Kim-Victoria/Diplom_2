@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import steps.UserSteps;
 
+import static data.GenerateValues.generateUniqueEmail;
 import static data.TestValues.*;
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -54,7 +55,7 @@ public class LoginUserTest extends BaseTest {
     public void loginUserWithoutEmail() {
         UserModel loginWithoutEmail = loginUserStep("", USER_PASSWORD);
         Response response = loginUser(loginWithoutEmail);
-        checkLoginErrorWithoutEmailStep(response);
+        checkLoginErrorWithoutEssentialFieldStep(response);
     }
     @Test
     @DisplayName("Логин пользователя без пароля")
@@ -62,7 +63,7 @@ public class LoginUserTest extends BaseTest {
     public void loginUserWithoutPassword() {
         UserModel loginWithoutPassword = loginUserStep(USER_EMAIL, "");
         Response response = loginUser(loginWithoutPassword);
-        checkLoginErrorWithoutPasswordStep(response);
+        checkLoginErrorWithoutEssentialFieldStep(response);
     }
     @Test
     @DisplayName("Логин пользователя с неверным email")
@@ -70,7 +71,7 @@ public class LoginUserTest extends BaseTest {
     public void loginUserWithWrongEmail() {
         UserModel loginWithWrongEmail = loginUserStep("wrong_email", USER_PASSWORD);
         Response response = loginUser(loginWithWrongEmail);
-        checkLoginErrorWithWrongEmailStep(response);
+        checkLoginErrorWithWrongInfoStep(response);
     }
     @Test
     @DisplayName("Логин пользователя с неверным паролем")
@@ -78,7 +79,7 @@ public class LoginUserTest extends BaseTest {
     public void loginUserWithWrongPassword() {
         UserModel loginWithWrongPassword = loginUserStep(user.getEmail(), "wrong_password");
         Response response = loginUser(loginWithWrongPassword);
-        checkLoginErrorWithWrongPasswordStep(response);
+        checkLoginErrorWithWrongInfoStep(response);
     }
 
     @Step ("Логин пользователя в системе")
@@ -91,20 +92,12 @@ public class LoginUserTest extends BaseTest {
                 .body("refreshToken", notNullValue())
                 .extract().path("refreshToken");
     }
-    @Step ("Проверка ошибки при логине пользователя без email")
-    public void checkLoginErrorWithoutEmailStep(Response response) {
+    @Step ("Проверка ошибки при логине пользователя без обязательного поля")
+    public void checkLoginErrorWithoutEssentialFieldStep(Response response) {
         response.then().statusCode(SC_UNAUTHORIZED).body("success", equalTo(false));
     }
-    @Step ("Проверка ошибки при логине пользователя без пароля")
-    public void checkLoginErrorWithoutPasswordStep(Response response) {
-        response.then().statusCode(SC_UNAUTHORIZED).body("success", equalTo(false));
-    }
-    @Step ("Проверка ошибки при логине с неверным email")
-    public void checkLoginErrorWithWrongEmailStep(Response response) {
-        response.then().statusCode(SC_UNAUTHORIZED).body("success", equalTo(false));
-    }
-    @Step ("Проверка ошибки при логине с неверным паролем")
-    public void checkLoginErrorWithWrongPasswordStep(Response response) {
+    @Step ("Проверка ошибки при логине с неверными данными")
+    public void checkLoginErrorWithWrongInfoStep(Response response) {
         response.then().statusCode(SC_UNAUTHORIZED).body("success", equalTo(false));
     }
 }

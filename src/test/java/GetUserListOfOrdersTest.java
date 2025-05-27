@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static data.GenerateValues.generateUniqueEmail;
 import static data.TestValues.USER_NAME;
 import static data.TestValues.USER_PASSWORD;
 import static org.apache.http.HttpStatus.SC_OK;

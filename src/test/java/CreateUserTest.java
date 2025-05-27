@@ -7,6 +7,7 @@ import org.junit.After;
 import org.junit.Test;
 import steps.UserSteps;
 
+import static data.GenerateValues.generateUniqueEmail;
 import static data.TestValues.*;
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -59,7 +60,7 @@ private String userToken;
         public void createUserWithoutEmail() {
             user = generateUserStep("", USER_PASSWORD, USER_NAME);
             Response response = createUser(user);
-            checkUserCreationErrorWithoutEmailStep(response);
+            checkUserCreationErrorWithoutEssentialStep(response);
         }
         @Test
         @DisplayName("Создание пользователя без указания пароля")
@@ -67,7 +68,7 @@ private String userToken;
         public void createUserWithoutPassword() {
             user = generateUserStep(USER_EMAIL, "", USER_NAME);
             Response response = createUser(user);
-            checkUserCreationWithoutPasswordStep(response);
+            checkUserCreationErrorWithoutEssentialStep(response);
         }
         @Test
         @DisplayName("Создание пользователя без указания имени")
@@ -75,7 +76,7 @@ private String userToken;
         public void createUserWithoutName() {
             user = generateUserStep(USER_EMAIL, USER_PASSWORD, "");
             Response response = createUser(user);
-            checkUserCreationWithoutNameStep(response);
+            checkUserCreationErrorWithoutEssentialStep(response);
         }
 
         @Step("Создание модели пользователя")
@@ -90,17 +91,9 @@ private String userToken;
         public void checkExistingUserCreationErrorStep(Response response) {
             response.then().statusCode(SC_FORBIDDEN).body("success", equalTo(false)).body("message", equalTo("User already exists"));
         }
-        @Step ("Проверка ошибки при создании пользователя без указания email")
-        public void checkUserCreationErrorWithoutEmailStep(Response response) {
+        @Step ("Проверка ошибки при создании пользователя без указания обязательного поля")
+        public void checkUserCreationErrorWithoutEssentialStep(Response response) {
             response.then().statusCode(SC_FORBIDDEN).body("success", equalTo(false)).body("message", equalTo( "Email, password and name are required fields"));
-        }
-        @Step ("Проверка ошибки при создании пользователя без указания пароля")
-        public void checkUserCreationWithoutPasswordStep(Response response) {
-            response.then().statusCode(SC_FORBIDDEN).body("success", equalTo(false)).body("message", equalTo( "Email, password and name are required fields"));
-        }
-        @Step ("Проверка ошибки при создании пользователя без указания имени")
-        public void checkUserCreationWithoutNameStep(Response response) {
-            response.then().statusCode(SC_FORBIDDEN).body("success", equalTo(false)).body("message", equalTo("Email, password and name are required fields"));
         }
 }
 
