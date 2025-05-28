@@ -70,6 +70,7 @@
                         <testFailureIgnore>false</testFailureIgnore>
                         <argLine>
                             -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar" --illegal-access=permit
+
                         </argLine>
                         <properties>
                             <property>
